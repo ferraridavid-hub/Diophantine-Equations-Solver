@@ -1,24 +1,23 @@
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.lang.IllegalArgumentException;
 
 /**
- * This class represents a limited continued fraction 
+ * This class represents a limited continued fraction
  * associated with a rational number
  */
 
 public class ContinuedFraction {
-  private int numerator = 0;
-  private int denominator = 1;
+  private RationalNumber q;
   private LinkedList<Integer> levelCoefficients = new LinkedList<>();
 
   public ContinuedFraction() {
   }
 
-  public ContinuedFraction(int numerator, int denominator) {
-    this.numerator = numerator;
-    this.denominator = denominator;
-    computeLevelCoefficients(numerator, denominator);
+  public ContinuedFraction(RationalNumber q) {
+    this.q = q
+    computeLevelCoefficients(q.getNumerator(), q.getDenominator());
   }
 
   // pre: num < den and gcd(num, den) = 1
@@ -26,13 +25,13 @@ public class ContinuedFraction {
    * Compute the coefficient of each level, and push it into the levelCoefficients
    * list
    */
-  public void computeLevelCoefficients(int num, int den) {
+  private void computeLevelCoefficients(int num, int den) {
     // 0 case
     if (num == 0) {
       levelCoefficients.addLast(0);
       return;
     }
-    
+
     if (num == 1) {
       if (den != num)
         levelCoefficients.addLast(den - num);
@@ -44,16 +43,21 @@ public class ContinuedFraction {
     computeLevelCoefficients(den % num, num);
   }
 
+  // return the i-th truncated fraction
+  public RationalNumber getTruncated(int j) {
+    if (j < 0 || j > levelCoefficients.size())
+      throw new IllegalArgumentException(
+          "getTruncated: cannot compute truncated fraction. The depth of this fraction is " + levelCoefficients.size());
+
+    
+  }
+
   public List<Integer> getLevels() {
     return Collections.unmodifiableList(levelCoefficients);
   }
 
-  public int getNumerator() {
-    return numerator;
-  }
-
-  public int getDenominator() {
-    return denominator;
+  public RationalNumber getRationalNumber() {
+    return q;
   }
 
   public static void main(String[] args) {
