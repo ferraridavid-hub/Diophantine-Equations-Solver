@@ -5,6 +5,7 @@ public class RationalNumber {
   public RationalNumber() {
   }
 
+  // TODO: reduce fraction if necessary.
   public RationalNumber(int numerator, int denominator) {
     this.numerator = numerator;
     this.denominator = denominator;
@@ -16,5 +17,9 @@ public class RationalNumber {
 
   public int getDenominator() {
     return denominator;
+  }
+
+  public String toString() {
+    return numerator + " / " + denominator;
   }
 }

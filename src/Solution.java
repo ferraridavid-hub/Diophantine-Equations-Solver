@@ -2,17 +2,16 @@ public class Solution {
   private int x;
   private int y;
 
-  private static int gcd(int a, int b) {
-    if (b == 0)
-      return a;
-    return gcd(b, a % b);
+  public Solution(int x, int y) {
+    this.x = x;
+    this.y = y;
   }
 
   public static Solution of(int M, int N, int Z) {
 
     // special case
-    if (gcd(M, N) != 1) {
-      if (gcd(M, N) == Z && gcd(M / Z, N / Z) == 1)
+    if (Utils.gcd(M, N) != 1) {
+      if (Utils.gcd(M, N) == Z && Utils.gcd(M / Z, N / Z) == 1)
         return solveBaseEquation(M / Z, N / Z);
       else
         return null;
@@ -28,15 +27,55 @@ public class Solution {
 
   // pre: gcd(M, N) = 1
   private static Solution solveBaseEquation(int M, int N) {
+    Solution s;
+    boolean swapped = false;
+
+    // swap M and N if M > N to perform the same algorithm. At the end the solution
+    // is negate
+    if (M > N) {
+      int t = M;
+      M = N;
+      N = t;
+      swapped = true;
+    }
+
     ContinuedFraction frac = new ContinuedFraction(new RationalNumber(M, N));
 
-    // continued fraction height
-    int fracDepth = frac.getLevels().size();
-  
+    int fracDepth = frac.getDepth();
     // even case
     if (fracDepth % 2 == 0) {
 
+      var temp = frac.getTruncated(fracDepth - 2);
+      if (swapped)
+        s = new Solution(temp.numerator, temp.denominator);
+      else
+        s = new Solution(temp.denominator, temp.numerator);
+
+    } else { // odd case
+
+      var temp = frac.getTruncated(fracDepth - 1);
+      if (swapped)
+        s = new Solution(temp.numerator, temp.denominator);
+      else
+        s = new Solution(temp.denominator, temp.numerator);
+
     }
-    return new Solution();
+
+    // if M > N the algorithm is the same, but to find a solution we need the
+    // negative of the M < N case
+    if (swapped) {
+      s.x = -s.x;
+      s.y = -s.y;
+    }
+
+    return s;
+  }
+
+  public String toString() {
+    return "(" + x + ", " + y + ")";
+  }
+
+  public static void main(String[] args) {
+    System.out.println(Solution.of(2, 5, 3));
   }
 }
