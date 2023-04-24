@@ -1,3 +1,7 @@
+/* TODO:
+ * - find the solution nearest to the origin
+ */
+
 public class Solution {
   private int x;
   private int y;
@@ -9,7 +13,21 @@ public class Solution {
 
   public static Solution of(int M, int N, int Z) {
 
-    // special case
+    if (M == 0) {
+      if (Z % N == 0)
+        return new Solution(0, -Z / N);
+      else
+        return null;
+    }
+
+    if (N == 0) {
+      if (Z % M == 0)
+        return new Solution(Z / M, 0);
+      else
+        return null;
+    }
+
+    // special case: M and N are not coprime integers
     if (Utils.gcd(M, N) != 1) {
       if (Utils.gcd(M, N) == Z && Utils.gcd(M / Z, N / Z) == 1)
         return solveBaseEquation(M / Z, N / Z);
@@ -17,7 +35,7 @@ public class Solution {
         return null;
     }
 
-    // general case: M, N coprime integers
+    // general case: M, N are coprime integers
     var solution = solveBaseEquation(M, N);
     solution.x = Z * solution.x;
     solution.y = Z * solution.y;
@@ -73,9 +91,5 @@ public class Solution {
 
   public String toString() {
     return "(" + x + ", " + y + ")";
-  }
-
-  public static void main(String[] args) {
-    System.out.println(Solution.of(2, 5, 3));
   }
 }

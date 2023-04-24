@@ -36,8 +36,10 @@ public class ContinuedFraction {
     }
 
     if (num == 1) {
+
       if (den != num)
         levelCoefficients.addLast(den - num);
+      
       levelCoefficients.addLast(1);
       return;
     }
@@ -49,9 +51,9 @@ public class ContinuedFraction {
   // return the j-th truncated fraction
   public RationalNumber getTruncated(int j) {
 
-    if (j < 0 || j > levelCoefficients.size())
+    if (j < 0 || j > getDepth())
       throw new IllegalArgumentException(
-          "getTruncated: cannot compute truncated fraction. The depth of this fraction is " + levelCoefficients.size());
+          "getTruncated: cannot compute truncated fraction. The depth of this fraction is " + getDepth());
 
     // two-step recursive function implementation for Mj and Nj
 
@@ -61,6 +63,7 @@ public class ContinuedFraction {
       return new RationalNumber(1, levelCoefficients.peekFirst());
 
     var iter = levelCoefficients.iterator();
+    
     int m0 = 0;
     int n0 = 1;
     int m1 = 1;
@@ -98,15 +101,6 @@ public class ContinuedFraction {
 
   public RationalNumber getRationalNumber() {
     return q;
-  }
-
-  public static void main(String[] args) {
-    ContinuedFraction frac = new ContinuedFraction(new RationalNumber(2, 5));
-    var levels = frac.getLevels();
-    System.out.println(levels);
-    System.out.println("depth" + frac.getDepth());
-    var rat2 = frac.getTruncated(frac.getDepth() - 1);
-    System.out.println(rat2);
   }
 
 }
